@@ -144,6 +144,7 @@ public class Record extends Activity implements SensorEventListener {
     @Override
     protected void onPause() {
         super.onPause();
+        //Removed this default code so that it still runs while screen is off
         //sensorManager.unregisterListener(this);
     }
 
