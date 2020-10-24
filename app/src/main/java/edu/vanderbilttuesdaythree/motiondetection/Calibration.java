@@ -115,11 +115,11 @@ public class Calibration extends Activity implements SensorEventListener {
             public void run() {
                 boolean keepRunning = true;
                 while(keepRunning) {
-                    String display = "X Acceleration: " + Round(x, xPrecision);
+                    String display = "X Accel: " + Round(x, xPrecision);
                     new updateX().execute(display);
-                    display = "Y Acceleration: " + Round(y, yPrecision);
+                    display = "Y Accel: " + Round(y, yPrecision);
                     new updateY().execute(display);
-                    display = "Z Acceleration: " + Round(z, zPrecision);
+                    display = "Z Accel: " + Round(z, zPrecision);
                     new updateZ().execute(display);
                     try {
                         Thread.sleep(30);
