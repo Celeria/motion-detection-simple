@@ -65,15 +65,23 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 SharedPreferences.Editor editor = settingsData.edit();
-                if (Integer.parseInt(setSampling.getText().toString()) <= maxSample) {
-                    editor.putInt("samplingRate", Integer.parseInt(setSampling.getText().toString()));
-                    editor.apply();
-                    String samplingText = "Current Sampling Rate: " + Integer.parseInt(setSampling.getText().toString()) + "\n\nSet new sampling rate below:";
-                    viewSampling.setText(samplingText);
+                if (!setSampling.getText().toString().equals("")){
+                    if (Integer.parseInt(setSampling.getText().toString()) <= maxSample) {
+                        editor.putInt("samplingRate", Integer.parseInt(setSampling.getText().toString()));
+                        editor.apply();
+                        String samplingText = "Current Sampling Rate: " + Integer.parseInt(setSampling.getText().toString()) + "\n\nSet new sampling rate below:";
+                        viewSampling.setText(samplingText);
+                    }
                 }
             }
         });
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final SharedPreferences settingsData = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final int maxSample = settingsData.getInt("maxHertz",0);
+        setSampling.setHint("Max HZ: " + maxSample);
     }
 }

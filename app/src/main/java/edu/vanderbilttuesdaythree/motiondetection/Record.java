@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
@@ -64,7 +65,7 @@ public class Record extends Activity implements SensorEventListener {
             @Override
             public void onClick(View view) {
                 keepRunning = false;
-                stopRecord.setText("COME BACK TO THIS PAGE TO RESTART RECORDING");
+                stopRecord.setText("COME BACK TO THIS PAGE TO RESTART RECORDING\nPRESS BACK BUTTON ON PHONE TO DO SO");
                 wakeLock.release();
                 stopRecord.setEnabled(false);
             }
