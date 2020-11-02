@@ -8,8 +8,8 @@ android {
         applicationId "edu.vanderbilttuesdaythree.motiondetection"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.04"
+        versionCode 6
+        versionName "1.06"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

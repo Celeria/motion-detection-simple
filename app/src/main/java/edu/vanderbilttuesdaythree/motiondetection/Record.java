@@ -1,7 +1,5 @@
 package edu.vanderbilttuesdaythree.motiondetection;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,7 +10,6 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +18,7 @@ import android.widget.TextView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static android.os.PowerManager.*;
+import static android.os.PowerManager.PARTIAL_WAKE_LOCK;
 
 public class Record extends Activity implements SensorEventListener {
 
@@ -94,7 +91,7 @@ public class Record extends Activity implements SensorEventListener {
                     totalMovement += Math.abs(currentAccel - prevAccel);
                     prevAccel = currentAccel;
                     long currentTime = System.currentTimeMillis();
-                    String display = "Total Movement: " + Round((float) totalMovement,Math.max(zPrecision,Math.max(xPrecision,yPrecision))) + "\nTime Elapsed:\n" + Round((float)(currentTime-firstTime)/1000,2) + " seconds";
+                    String display = "Total Movement: " + Round((float) totalMovement,Math.max(zPrecision,Math.max(xPrecision,yPrecision))) + "\nTime Elapsed:\n" + Round((float)(currentTime-firstTime)/1000,1) + " seconds";
                     new update().execute(display);
                     try {
                         Thread.sleep(sleepTime);
@@ -150,6 +147,9 @@ public class Record extends Activity implements SensorEventListener {
     }
 
     public double Round(float input,int scale) {
+        if (scale > 30) {
+            scale = 30;
+        }
         BigDecimal bd = BigDecimal.valueOf(input);
         bd = bd.setScale(scale, RoundingMode.HALF_UP);
         return bd.doubleValue();

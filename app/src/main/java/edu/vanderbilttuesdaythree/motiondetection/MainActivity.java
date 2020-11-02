@@ -34,8 +34,10 @@ public class MainActivity extends AppCompatActivity{
 
         final SharedPreferences settingsData = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean firstTime = settingsData.getBoolean("firstTime",true);
-        int samplingRate = settingsData.getInt("samplingRate",100);
-        String samplingText = "Current Sampling Rate: " + samplingRate + "\n\nSet new sampling rate below:";
+        final int samplingRate = settingsData.getInt("samplingRate",50);
+        int actualSamplingRate = (int)(1000 / (long)(1000/(double)samplingRate));
+        String samplingText = "Set Sampling Rate: " + samplingRate + "\nActual Sampling Rate: " + actualSamplingRate
+                + "\n\nSet new sampling rate below:";
         viewSampling.setText(samplingText);
 
         final Intent goCalibrate = new Intent(this,Calibration.class);
@@ -69,7 +71,10 @@ public class MainActivity extends AppCompatActivity{
                     if (Integer.parseInt(setSampling.getText().toString()) <= maxSample) {
                         editor.putInt("samplingRate", Integer.parseInt(setSampling.getText().toString()));
                         editor.apply();
-                        String samplingText = "Current Sampling Rate: " + Integer.parseInt(setSampling.getText().toString()) + "\n\nSet new sampling rate below:";
+                        int samplingRate2 = Integer.parseInt(setSampling.getText().toString());
+                        int actualSamplingRate = (int)(1000 / (long)(1000/(double)samplingRate2));
+                        String samplingText = "Set Sampling Rate: " + samplingRate2 + "\nActual Sampling Rate: " + actualSamplingRate
+                                + "\n\nSet new sampling rate below:";
                         viewSampling.setText(samplingText);
                     }
                 }

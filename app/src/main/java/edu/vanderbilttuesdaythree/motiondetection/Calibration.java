@@ -10,11 +10,8 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,9 +26,9 @@ public class Calibration extends Activity implements SensorEventListener {
     float z = 0;
     int counter = 0;
 
-    int xPrecision;
-    int yPrecision;
-    int zPrecision;
+    static int xPrecision;
+    static int yPrecision;
+    static int zPrecision;
 
     TextView txtInfo;
     TextView X;
@@ -40,7 +37,7 @@ public class Calibration extends Activity implements SensorEventListener {
     EditText pZ;
     EditText pX;
     EditText pY;
-    Button btnCalibrate;
+    //Button btnCalibrate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +51,7 @@ public class Calibration extends Activity implements SensorEventListener {
         pX = findViewById(R.id.pX);
         pY = findViewById(R.id.pY);
         pZ = findViewById(R.id.pZ);
-        btnCalibrate = findViewById(R.id.btnUpdatePrecision);
+        //btnCalibrate = findViewById(R.id.btnUpdatePrecision);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -90,25 +87,48 @@ public class Calibration extends Activity implements SensorEventListener {
             }
         }.start();
 
-        btnCalibrate.setOnClickListener(new View.OnClickListener() {
+        //deprecated
+//        btnCalibrate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //(!pX.getText().toString().equals("") && !pX.getText().toString().equals("") && !pX.getText().toString().equals(""))
+//                try{
+//                    xPrecision = Integer.parseInt(pX.getText().toString());
+//                    yPrecision = Integer.parseInt(pY.getText().toString());
+//                    zPrecision = Integer.parseInt(pZ.getText().toString());
+//                    SharedPreferences.Editor editor = settingsData.edit();
+//                    editor.putInt("xPrecision",xPrecision);
+//                    editor.putInt("yPrecision",yPrecision);
+//                    editor.putInt("zPrecision",zPrecision);
+//                    editor.commit();
+//                } catch (Exception e) {
+//                    Toast fail = Toast.makeText(getApplicationContext(),"No blanks or numbers smaller than 1 (or greater than 2 billion) allowed, please try again.",Toast.LENGTH_LONG);
+//                    fail.show();
+//                }
+//            }
+//        });
+
+        //update precision dynamically
+        new Thread() {
             @Override
-            public void onClick(View view) {
-                //(!pX.getText().toString().equals("") && !pX.getText().toString().equals("") && !pX.getText().toString().equals(""))
-                try{
-                    xPrecision = Integer.parseInt(pX.getText().toString());
-                    yPrecision = Integer.parseInt(pY.getText().toString());
-                    zPrecision = Integer.parseInt(pZ.getText().toString());
-                    SharedPreferences.Editor editor = settingsData.edit();
-                    editor.putInt("xPrecision",xPrecision);
-                    editor.putInt("yPrecision",yPrecision);
-                    editor.putInt("zPrecision",zPrecision);
-                    editor.commit();
-                } catch (Exception e) {
-                    Toast fail = Toast.makeText(getApplicationContext(),"No blanks or numbers smaller than 1 allowed, please try again.",Toast.LENGTH_LONG);
-                    fail.show();
+            public void run() {
+                while(true){
+                    try{
+                        xPrecision = Integer.parseInt(pX.getText().toString());
+                        yPrecision = Integer.parseInt(pY.getText().toString());
+                        zPrecision = Integer.parseInt(pZ.getText().toString());
+                        SharedPreferences.Editor editor = settingsData.edit();
+                        editor.putInt("xPrecision",xPrecision);
+                        editor.putInt("yPrecision",yPrecision);
+                        editor.putInt("zPrecision",zPrecision);
+                        editor.commit();
+                        Thread.sleep(143);
+                    } catch (Exception e) {
+
+                    }
                 }
             }
-        });
+        }.start();
 
         new Thread() {
             @Override
@@ -218,6 +238,9 @@ public class Calibration extends Activity implements SensorEventListener {
     }
 
     public double Round(float input,int scale) {
+        if (scale > 30) {
+            scale = 30;
+        }
         BigDecimal bd = BigDecimal.valueOf(input);
         bd = bd.setScale(scale, RoundingMode.HALF_UP);
         return bd.doubleValue();
